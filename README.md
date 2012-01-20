@@ -16,7 +16,7 @@ Precompile (optional)
 bundle exec rake precompile
 ```
 
-Watch (optional)
+Watch
 
 ```
 bundle exec rake watch
