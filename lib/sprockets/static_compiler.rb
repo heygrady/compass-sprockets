@@ -8,12 +8,13 @@ module Sprockets
       @env = env
       @target = target
       @paths = paths
-      @digest = options.key?(:digest) ? options.delete(:digest) : true
-      @manifest = options.key?(:manifest) ? options.delete(:manifest) : true
+      @digest = options.fetch(:digest, true)
+      @manifest = options.fetch(:manifest, true)
       @manifest_path = options.delete(:manifest_path) || target
+      @zip_files = options.delete(:zip_files) || /\.(?:css|html|js|svg|txt|xml)$/
     end
 
-    def compile(base = nil, relative = nil)
+    def compile
       manifest = {}
       env.each_logical_path do |logical_path|
         next unless compile_path?(logical_path)
@@ -36,7 +37,7 @@ module Sprockets
         filename = File.join(target, path)
         FileUtils.mkdir_p File.dirname(filename)
         asset.write_to(filename)
-        asset.write_to("#{filename}.gz") if filename.to_s =~ /\.(css|js)$/
+        asset.write_to("#{filename}.gz") if filename.to_s =~ @zip_files
       end
     end
 
